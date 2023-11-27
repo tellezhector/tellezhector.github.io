@@ -2,16 +2,51 @@
 <html lang="en">
 <head>
   <style>
-    .border {
-      border: 5px solid black;
+    body {
+      background-color: #393053;
     }
 
-    </style>
+    .card {
+      background-color: #5C5470;
+      border: 1px solid #4ec9a5;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: large;
+      font-weight: bold;
+      color: #eaebef;
+    }
 
+    .word_box {
+      margin: 20px;
+      border: 1px solid #eaebef;
+      padding: 5px;
+    }
+
+    .red {
+      background-color: #ff5448;
+    }
+
+    .yellow {
+      background-color: #ff9248;
+    }
+  </style>
+
+  <script>
+    displayWords = function(regular_words, highlighted_word){
+     document.getElementById('word-1').innerText = regular_words[0]
+     document.getElementById('word-2').innerText = regular_words[1]
+     document.getElementById('word-3').innerText = regular_words[2]
+     document.getElementById('word-4').innerText = regular_words[3]
+     document.getElementById('word-5').innerText = highlighted_word
+    }
+
+    window.onload = function() {
+     displayWords(['hello', 'sad', 'word', 'salad'], 'chihuahua')
+   };
+  </script>
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title>Words</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -38,15 +73,14 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-
       <div class="one-third column" style="margin-top: 25%">
       </div>
-      <div class="one-third column border">
-        <div class="row border">uno</div>
-        <div class="row border">dos</div>
-        <div class="row border">tres</div>
-        <div class="row border">cuatro</div>
-        <div class="row border">cinco</div>
+      <div class="one-third column card">
+        <div id="word-1" class="row word_box yellow">dos</div>
+        <div id="word-2" class="row word_box yellow">tres</div>
+        <div id="word-3" class="row word_box yellow">cuatro</div>
+        <div id="word-4" class="row word_box yellow">cinco</div>
+        <div id="word-5" class="row word_box red">uno</div>
       </div>
     </div>
   </div>
