@@ -68,26 +68,118 @@
     }
     // end of borrowed from // borrowed from: https://stackoverflow.com/a/47593316/1399310
 
+    function freshSeed() {
+      return (new Date().getTime() % 10000) + ''
+    }
+
+    const words = {
+      'regular': [
+        {'es_MX': 'lluvia', 'en_US': 'rain'},
+        {'es_MX': 'glaseado', 'en_US': 'icing'},
+        {'es_MX': 'rayas', 'en_US': 'stripes'},
+        {'es_MX': 'sonrojarse', 'en_US': 'blush'},
+        {'es_MX': 'lampara', 'en_US': 'lamp'},
+        {'es_MX': 'motor', 'en_US': 'engine'},
+        {'es_MX': 'pop', 'en_US': 'pop'},
+        {'es_MX': 'cereza', 'en_US': 'cherry'},
+        {'es_MX': 'fruncir el ceño', 'en_US': 'frown'},
+        {'es_MX': 'torpedo', 'en_US': 'torpedo'},
+        {'es_MX': 'bata de baño', 'en_US': 'bathrobe'},
+        {'es_MX': 'zancos', 'en_US': 'stilts'},
+        {'es_MX': 'bigotes', 'en_US': 'whiskers'},
+        {'es_MX': 'patear', 'en_US': 'kicking'},
+        {'es_MX': 'esfinge', 'en_US': 'sphynx'},
+        {'es_MX': 'código de barras', 'en_US': 'barcode'},
+      ],
+      'highlighted': [
+        {'es_MX': 'barril', 'en_US': 'barrel'},
+        {'es_MX': 'aguja e hilo', 'en_US': 'needle and thread'},
+        {'es_MX': 'garganta irritada', 'en_US': 'sore throat'},
+        {'es_MX': 'traje de buzo', 'en_US': 'wet suit'},
+        {'es_MX': 'drama', 'en_US': 'drama'},
+      ]
+    }
+
     const queryString = window.location.search;
     const url = new URL(window.location);
-    const seed = url.searchParams.has('s') ? url.searchParams.get('s') : new Date().getTime() + 's'
+    const textSeed = url.searchParams.has('s') ? url.searchParams.get('s') : freshSeed()
+    const locale = url.searchParams.has('l') ? url.searchParams.get('l') : 'es_MX'
+    const second_locale = url.searchParams.has('sl') ? url.searchParams.get('sl') : 'en_US'
+    var card_index = url.searchParams.has('i') ? parseInt(url.searchParams.get('i')) : parseInt('0')
+    var card_index = card_index ? !isNaN(card_index) : 0
     if (!url.searchParams.has('s')){
-      url.searchParams.append('s', seed)
+      url.searchParams.append('s', textSeed)
       history.pushState({}, null, url)
     }
-    const numSeed = cyrb128(seed)[0]
+    const numSeed = cyrb128(textSeed)[0]
     const random = mulberry32(numSeed)
 
-    displayWords = function(regular_words, highlighted_word){
-     document.getElementById('word-1').innerText = random()
-     document.getElementById('word-2').innerText = regular_words[1]
-     document.getElementById('word-3').innerText = regular_words[2]
-     document.getElementById('word-4').innerText = regular_words[3]
-     document.getElementById('word-5').innerText = highlighted_word
+    class Card {
+      constructor(words, locale, second_locale) {
+        this.words = words
+        this.locale = locale
+        this.second_locale = second_locale
+      }
+
+      getWord(index){
+        return this.words[index][this.locale]
+      }
+
+      get_translation(index){
+        return this.words[index][this.second_locale]
+      }
     }
 
+    function shuffleWords(words, seed) {
+      var [r, seed] = srandom(seed)
+      const new_words = []
+      while (words.length > 0) {
+        const index = Math.floor(r * words.length)
+        word = words.splice(index, 1)[0]
+        new_words.push(word)
+        [r, seed] = srandom(seed)
+      }
+      return new_words
+    }
+
+    buildDeck = function(regular_words, highlighted_words, locale, second_locale, seed){
+      regular_words = shuffleWords(regular_words.slice(), seed)
+      highlighted_words = shuffleWords(highlighted_words.slice(), seed)
+      max_cards = Math.min(regular_words.length, highlighted_words.length * 4) / 4
+      max_cards = Math.floor(max_cards)
+      const cards = []
+      for (let i = 0; i < max_cards; i++) {
+        card = new Card([
+          regular_words.pop(),
+          regular_words.pop(),
+          regular_words.pop(),
+          regular_words.pop(),
+          highlighted_words.pop()
+        ], locale,
+        second_locale)
+        cards.push(card)
+      }
+      return cards
+    }
+
+
+    function displayCard(card){
+     document.getElementById('word-1').innerText = card.getWord(0)
+     document.getElementById('word-2').innerText = card.getWord(1)
+     document.getElementById('word-3').innerText = card.getWord(2)
+     document.getElementById('word-4').innerText = card.getWord(3)
+     document.getElementById('word-5').innerText = card.getWord(4)
+    }
+
+    function incrementAndUpdate() {
+      card_index += 1
+      displayCard(cards[card_index % cards.length])
+    }
+
+    cards = buildDeck(words['regular'], words['highlighted'], locale, second_locale, numSeed)
     window.onload = function() {
-     displayWords(['hello', 'sad', 'word', 'salad'], 'chihuahua')
+     displayCard(cards[card_index])
+     document.getElementById('next-card').addEventListener('click', incrementAndUpdate)
    };
   </script>
   <!-- Basic Page Needs
@@ -128,6 +220,14 @@
         <div id="word-3" class="row word_box yellow">cuatro</div>
         <div id="word-4" class="row word_box yellow">cinco</div>
         <div id="word-5" class="row word_box red">uno</div>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 30px;">
+      <div class="one-third column">
+      </div>
+      <div class="one-third column">
+         <button id="next-card" class="button-primary">next</button>
       </div>
     </div>
   </div>
