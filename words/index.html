@@ -583,34 +583,41 @@
         {'es_MX': 'videoarte', 'en_US': 'video art'},
         {'es_MX': 'virus', 'en_US': 'virus'},
         {'es_MX': 'volumen', 'en_US': 'volume'},
-
       ]
     }
 
-    function saveURLParam(name, value) {
+    function saveURLParams(key_value_pairs) {
       const url = new URL(window.location);
-      if (!url.searchParams.has(name)) {
-        url.searchParams.append(name, value)
-      } else {
-        url.searchParams.set(name, value)
+      for (var name in key_value_pairs){
+        value = key_value_pairs[name]
+        if (!url.searchParams.has(name)) {
+          url.searchParams.append(name, value)
+        } else {
+          url.searchParams.set(name, value)
+        }
       }
       history.pushState({}, null, url)
     }
 
-    const url = new URL(window.location);
-    const textSeed = url.searchParams.has('s') ? url.searchParams.get('s') : freshSeed()
+    var url = new URL(window.location);
+    var textSeed = url.searchParams.has('s') ? url.searchParams.get('s') : freshSeed()
     var locale = url.searchParams.has('l') ? url.searchParams.get('l') : 'es_MX'
     var second_locale = url.searchParams.has('sl') ? url.searchParams.get('sl') : 'en_US'
     var card_index = url.searchParams.has('i') ? parseInt(url.searchParams.get('i')) : parseInt('0')
     var card_index = isNaN(card_index) ? 0 : card_index
     const numSeed = cyrb128(textSeed)[0]
-    const random = mulberry32(numSeed)
+
+    function resetParams(){
+      const url = new URL(window.location);
+      keys = []
+      url.searchParams.forEach((value, key, _) => keys.push(key))
+      keys.forEach((key, index, _) => url.searchParams.delete(key))
+      history.pushState({}, null, url)
+      location.reload()
+    }
 
     function saveParams(){
-      saveURLParam('i', card_index)
-      saveURLParam('sl', second_locale)
-      saveURLParam('l', locale)
-      saveURLParam('s', textSeed)
+      saveURLParams({'i': card_index, 'sl' : second_locale, 'l': locale, 's': textSeed})
     }
 
     class Card {
@@ -705,11 +712,13 @@
       words['highlighted'].slice(),
       numSeed)
     cards = shuffleArray(cards, numSeed)
+
     window.onload = function() {
      document.getElementById('next_card').addEventListener('click', incrementAndUpdate)
      document.getElementById('previous_card').addEventListener('click', decrementAndUpdate)
      document.getElementById('swap_locales').addEventListener('click', swapLanguages)
      document.getElementById('save_params').addEventListener('click', saveParams)
+     document.getElementById('reset_params').addEventListener('click', resetParams)
 
      updateCard()
    };
@@ -810,18 +819,15 @@
       color: #b4a4dc;
     }
 
-    .save_button {
+    .small_buttons {
       color: #5C5470;
+      padding-left: 5px;
       float: right;
       top: 0;
       cursor: pointer;
     }
 
-    .save_button:hover, .regular_button:focus {
-      color: #b4a4dc;
-    }
-
-    .save_button:focus {
+    .small_buttons:hover, .small_buttons:focus {
       color: #b4a4dc;
     }
 
@@ -846,11 +852,15 @@
   <div class="container">
     <div class="row">
       <div class="three columns" style="margin-top: 1px;">
-        <span id="save_params" class="save_button">
-          <i class="fa-solid fa-floppy-disk"></i>
-        </span>
+        <!-- empty-->
       </div>
       <div class="six columns">
+        <span id="save_params" class="small_buttons">
+          <i class="fa-solid fa-floppy-disk"></i>
+        </span>
+        <span id="reset_params" class="small_buttons">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </span>
         <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
       </div>
     </div>
