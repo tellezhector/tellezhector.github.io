@@ -2043,7 +2043,7 @@
       return shuffled_array
     }
 
-    function buildDeck(regular_words, highlighted_words, seed){
+    function buildWholeDeck(regular_words, highlighted_words){
       regular_words = shuffleArray(regular_words, 0)
       highlighted_words = shuffleArray(highlighted_words, 0)
       max_cards = Math.min(regular_words.length, highlighted_words.length * 4) / 4
@@ -2059,11 +2059,7 @@
           regular_words.pop(),
           highlighted_words.pop()]
         )
-
-        // only push cards for this user
-        if (i % users.length == user_index) {
-          cards.push(card)
-        }
+        cards.push(card)
       }
       return cards
     }
@@ -2081,10 +2077,18 @@
       }
     }
 
+    function seedFromText(text) {
+      return cyrb128(text)[0]
+    }
+
+    function cardsForUser(cards, user_index) {
+      return cards.filter((c, i) => i % users.length == user_index)
+    }
+
     var url = new URL(window.location);
     var params = url.searchParams
     var textSeed = params.has('s') ? params.get('s') : freshSeed()
-    var numSeed = cyrb128(textSeed)[0]
+    var numSeed = seedFromText(textSeed)
     var locale = params.has('l') ? params.get('l') : 'es_MX'
     var second_locale = params.has('sl') ? params.get('sl') : 'en_US'
     var card_index = params.has('i') ? parseInt(params.get('i')) : parseInt('0')
@@ -2132,12 +2136,26 @@
       updateCard()
     }
 
-    cards = buildDeck(
+    function shuffleDeck() {
+      textSeed = (numSeed % 10000) + ''
+      numSeed = seedFromText(textSeed)
+      cards = shuffleArray(cards, numSeed)
+      card_index = 0
+      updateCard()
+    }
+
+    allCards = buildWholeDeck(
       words['regular'].slice(),
-      words['highlighted'].slice(),
-      user_index,
-      numSeed)
+      words['highlighted'].slice())
+    cards = cardsForUser(allCards, user_index)
     cards = shuffleArray(cards, numSeed)
+
+    function changeUser(){
+      user_index = sanitizeIndex(user_index + 1, users.length)
+      user = users[user_index]
+      cards = cardsForUser(allCards, user_index)
+      updateCard()
+    }
 
     window.onload = function() {
      document.getElementById('next_card').addEventListener('click', incrementAndUpdate)
@@ -2145,6 +2163,8 @@
      document.getElementById('swap_locales').addEventListener('click', swapLanguages)
      document.getElementById('save_params').addEventListener('click', saveParams)
      document.getElementById('reset_params').addEventListener('click', resetParams)
+     document.getElementById('shuffle').addEventListener('click', shuffleDeck)
+     document.getElementById('username').addEventListener('click', changeUser)
 
      updateCard()
    };
@@ -2228,6 +2248,11 @@
     .username {
       color: #4ec9a5;
       font-weight: bold;
+      cursor: pointer;
+    }
+
+    .username:hover {
+      text-decoration: underline;
     }
 
     .card_number {
@@ -2305,7 +2330,7 @@
           <i class="fa-solid fa-floppy-disk"></i>
         </span>
         <span id="reset_params" class="small_buttons">
-          <i class="fa-solid fa-arrows-rotate"></i>
+          <i class="fa-solid fa-ban"></i>
         </span>
         <img src="logo.png" style="width: 200px;  display: block; margin-left: auto; margin-right: auto;">
       </div>
@@ -2353,6 +2378,9 @@
         </div>
 
         <div class="six columns">
+          <button id="shuffle" class="regular_button left_button">
+            <i class="fa-solid fa-arrows-rotate"></i>
+          </button>
           <button id="swap_locales" class="regular_button right_button">
             <i class="fa-solid fa-language"></i>
           </button>
