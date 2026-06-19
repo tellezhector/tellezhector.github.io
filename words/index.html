@@ -2259,27 +2259,6 @@
       font-family: 'Courier New', Courier, monospace;
     }
 
-    .name_tag {
-      color: #b4a4dc;
-      padding-left: 5px;
-      font-size: small;
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    .username {
-      color: #4ec9a5;
-      font-weight: bold;
-      cursor: pointer;
-
-      /* disable selection because double clicking has an action on this element. */
-      -webkit-user-select: none; /* Safari */
-      -ms-user-select: none; /* IE 10 and IE 11 */
-      user-select: none; /* Standard syntax */
-    }
-
-    .username:hover {
-      text-decoration: underline;
-    }
 
     .card_number {
       color: #b4a4dc;
@@ -2311,8 +2290,33 @@
       color: #b4a4dc;
     }
 
+    .name_tag {
+      color: #b4a4dc;
+      padding-left: 5px;
+      float: left;
+      width: 30%;
+      font-size: small;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .username {
+      color: #4ec9a5;
+      font-weight: bold;
+      cursor: pointer;
+
+      /* disable selection because double clicking has an action on this element. */
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+
+    .username:hover {
+      text-decoration: underline;
+    }
+
     .small_buttons_container {
       float: right;
+      width: 30%;
     }
 
     .small_button {
@@ -2351,31 +2355,22 @@
       </div>
 
       <div class="six columns">
-        <div class="row">
-          <div class="four columns">
-            <div class="name_tag">
-              <span id="introduction">hello</span>
-              <div></div>
-              <span id="username" class="username">world</span>
-            </div>
-          </div>
-          <div class="four columns">
-            <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
-          </div>
-          <div class="four columns">
-            <div class="small_buttons_container">
-              <span id="save_params" class="small_button">
-                <i class="fa-solid fa-floppy-disk"></i>
-              </span>
-              <span id="reset_params" class="small_button">
-                <i class="fa-solid fa-ban"></i>
-              </span>
-            </div>
-          </div>
+        <div class="name_tag">
+          <span id="introduction">hello</span>
+          <div></div>
+          <span id="username" class="username">world</span>
         </div>
 
+        <div class="small_buttons_container">
+          <span id="save_params" class="small_button">
+            <i class="fa-solid fa-floppy-disk"></i>
+          </span>
+          <span id="reset_params" class="small_button">
+            <i class="fa-solid fa-ban"></i>
+          </span>
+        </div>
 
-
+        <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
       </div>
 
       <div class="three columns" style="margin-top: 1px;">
