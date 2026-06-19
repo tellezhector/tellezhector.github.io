@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fillers</title>
   <style>
+    #container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
     h1 {
       text-align: center;
       font-size: 2rem;
@@ -23,7 +28,7 @@
       align-items: center;
       justify-content: center;
       padding: 4px 12px;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       border-radius: 4px;
     }
 
@@ -38,17 +43,15 @@
       display: grid;
       grid-template-columns: repeat(10, 1fr);
       gap: 4px;
-      max-width: 600px;
     }
 
     .cell {
       display: flex;
       align-items: center;
       justify-content: center;
-      aspect-ratio: 1;
+      aspect-ratio: 4 / 3;
       font-size: 0.85rem;
       border-radius: 4px;
-      color: #000;
     }
 
     .canon      { background-color: #4caf50; color: #fff; }
@@ -56,20 +59,42 @@
     .filler     { background-color: #f44336; color: #fff; }
     .anime_canon { background-color: #ff9800; color: #fff; }
     .unknown    { background-color: #555; color: #aaa; }
+
+    #download-btn {
+      display: block;
+      margin: 1rem auto 0;
+      padding: 8px 20px;
+      font-family: monospace;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #333;
+      color: #eee;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+
+    #download-btn:hover {
+      background: #444;
+    }
   </style>
 </head>
 <body>
 
-<h1 id="page-title"></h1>
-<div id="legend">
-  <div id="canon" class="legend-item canon">canon</div>
-  <div id="mixed" class="legend-item mixed">mixed</div>
-  <div id="anime_canon" class="legend-item anime_canon">anime canon</div>
-  <div id="filler" class="legend-item filler">filler</div>
-  <div id="unknown" class="legend-item unknown">unknown</div>
+<div id="container">
+  <h1 id="page-title"></h1>
+  <div id="legend">
+    <div id="canon" class="legend-item canon">canon</div>
+    <div id="mixed" class="legend-item mixed">mixed</div>
+    <div id="anime_canon" class="legend-item anime_canon">anime canon</div>
+    <div id="filler" class="legend-item filler">filler</div>
+    <div id="unknown" class="legend-item unknown">unknown</div>
+  </div>
+  <div id="grid"></div>
 </div>
-<div id="grid"></div>
 
+<button id="download-btn">Download as PNG</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
   const title = "One Piece"
   const canon = [1, 6, 8, 14, 23, 25, 27, 29, 33, 34, 35, 36, 45, 50, 54, 61, 69, 71, 73, 86, 92, 101, 110, 111, 112, 121, 126, 130];
@@ -97,6 +122,15 @@
     cell.textContent = i;
     grid.appendChild(cell);
   }
+
+  document.getElementById('download-btn').addEventListener('click', () => {
+    html2canvas(document.getElementById('container'), { backgroundColor: '#111' }).then(canvas => {
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = `${title.replace(/\s+/g, '_')}_fillers.png`;
+      a.click();
+    });
+  });
 </script>
 
 </body>
