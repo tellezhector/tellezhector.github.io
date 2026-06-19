@@ -19,7 +19,7 @@
       margin: 20px;
       border: 1px solid #eaebef;
       padding: 5px;
-      height: 2em;
+      min-height: 2em;
     }
 
     .translation {
@@ -593,6 +593,13 @@
     const numSeed = cyrb128(textSeed)[0]
     const random = mulberry32(numSeed)
 
+    function saveParams(){
+      saveURLParam('s', textSeed)
+      saveURLParam('l', locale)
+      saveURLParam('sl', second_locale)
+      saveURLParam('i', card_index)
+    }
+
     class Card {
       constructor(card_number, words) {
         // words is a list of dictionaries, each dictionary is of the shape:
@@ -656,14 +663,25 @@
       return new_index
     }
 
+    function updateCard() {
+      displayCard(cards[card_index], locale, second_locale)
+    }
+
     function incrementAndUpdate() {
       card_index = sanitizeCardIndex(card_index + 1)
-      displayCard(cards[card_index], locale, second_locale)
+      updateCard()
     }
 
     function decrementAndUpdate() {
       card_index = sanitizeCardIndex(card_index - 1)
-      displayCard(cards[card_index % cards.length], locale, second_locale)
+      updateCard()
+    }
+
+    function swapLanguages() {
+      const tmp = locale
+      locale = second_locale
+      second_locale = tmp
+      updateCard()
     }
 
     cards = buildDeck(
@@ -675,6 +693,8 @@
      displayCard(cards[card_index], locale, second_locale)
      document.getElementById('next_card').addEventListener('click', incrementAndUpdate)
      document.getElementById('previous_card').addEventListener('click', decrementAndUpdate)
+     document.getElementById('swap_locales').addEventListener('click', swapLanguages)
+     document.getElementById('save_params').addEventListener('click', saveParams)
    };
   </script>
   <!-- Basic Page Needs
@@ -741,7 +761,7 @@
       <button id="save_params" class="regular_button left_button">
         <i class="fa-solid fa-floppy-disk"></i>
       </button>
-      <button id="swap_languages" class="regular_button right_button">
+      <button id="swap_locales" class="regular_button right_button">
         <i class="fa-solid fa-language"></i>
       </button>
     </div>
