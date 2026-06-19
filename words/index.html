@@ -607,10 +607,10 @@
     const random = mulberry32(numSeed)
 
     function saveParams(){
-      saveURLParam('s', textSeed)
-      saveURLParam('l', locale)
-      saveURLParam('sl', second_locale)
       saveURLParam('i', card_index)
+      saveURLParam('sl', second_locale)
+      saveURLParam('l', locale)
+      saveURLParam('s', textSeed)
     }
 
     class Card {
@@ -792,6 +792,15 @@
       color: #b4a4dc;
     }
 
+    .save_button {
+      position: fixed;
+      top: 0;
+    }
+
+    .save_button:focus {
+      color: #b4a4dc;
+    }
+
     .right_button {
       font-size: large;
       float: right;
@@ -851,20 +860,23 @@
     </div>
   </div>
 
+  <span id="save_params" class="regular_button left_button save_button">
+    <i class="fa-solid fa-floppy-disk"></i>
+  </span>
+
   <div class="footer">
     <div class="container">
       <div class="row" style="margin-top: 30px;">
+
         <div class="one-third column" style="margin-top: 1px;">
           <!-- empty-->
         </div>
 
         <div class="one-third column">
-          <button id="save_params" class="regular_button left_button">
-            <i class="fa-solid fa-floppy-disk"></i>
-          </button>
           <button id="swap_locales" class="regular_button right_button">
             <i class="fa-solid fa-language"></i>
           </button>
+          <div style="clear: both;"></div>
           <button id="previous_card" class="button-primary left_button">
             <i class="fa-solid fa-arrow-left"></i>
           </button>
