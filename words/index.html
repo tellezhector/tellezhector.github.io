@@ -2007,16 +2007,6 @@
       history.pushState({}, null, url)
     }
 
-    var url = new URL(window.location);
-    var textSeed = url.searchParams.has('s') ? url.searchParams.get('s') : freshSeed()
-    var numSeed = cyrb128(textSeed)[0]
-    var locale = url.searchParams.has('l') ? url.searchParams.get('l') : 'es_MX'
-    var second_locale = url.searchParams.has('sl') ? url.searchParams.get('sl') : 'en_US'
-    var card_index = url.searchParams.has('i') ? parseInt(url.searchParams.get('i')) : parseInt('0')
-    var card_index = isNaN(card_index) ? 0 : card_index
-    var user_index = Math.floor(srandom(numSeed)[0] * users.length)
-    var user = users[user_index]
-
     function resetParams(){
       const url = new URL(window.location);
       keys = []
@@ -2024,10 +2014,6 @@
       keys.forEach((key, index, _) => url.searchParams.delete(key))
       history.pushState({}, null, url)
       location.reload()
-    }
-
-    function saveParams(){
-      saveURLParams({'i': card_index, 'sl' : second_locale, 'l': locale, 's': textSeed})
     }
 
     class Card {
@@ -2082,7 +2068,6 @@
       return cards
     }
 
-
     function displayCard(card, card_index, user, locale, second_locale) {
       document.getElementById('username').innerText = user[locale]
       document.getElementById('introduction').innerText = introduction[locale]
@@ -2096,10 +2081,34 @@
       }
     }
 
-    function sanitizeCardIndex(new_index) {
-      new_index += cards.length
-      new_index = new_index % cards.length
-      return new_index
+    var url = new URL(window.location);
+    var params = url.searchParams
+    var textSeed = params.has('s') ? params.get('s') : freshSeed()
+    var numSeed = cyrb128(textSeed)[0]
+    var locale = params.has('l') ? params.get('l') : 'es_MX'
+    var second_locale = params.has('sl') ? params.get('sl') : 'en_US'
+    var card_index = params.has('i') ? parseInt(params.get('i')) : parseInt('0')
+    var card_index = isNaN(card_index) ? 0 : card_index
+    var user_index = params.has('u') ? parseInt(params.get('u')) : Math.floor(srandom(numSeed)[0] * users.length)
+    var user_index = sanitizeIndex(user_index, users.length)
+    var user = users[user_index]
+
+    function sanitizeIndex(index, max) {
+      while (index < 0) {
+        index += max
+      }
+      index = index % max
+      return index
+    }
+
+    function saveParams(){
+      saveURLParams({
+        'l': locale,
+        'sl' : second_locale,
+        'u': user_index,
+        'i': card_index,
+        's': textSeed,
+      })
     }
 
     function updateCard() {
@@ -2107,12 +2116,12 @@
     }
 
     function incrementAndUpdate() {
-      card_index = sanitizeCardIndex(card_index + 1)
+      card_index = sanitizeIndex(card_index + 1, cards.length)
       updateCard()
     }
 
     function decrementAndUpdate() {
-      card_index = sanitizeCardIndex(card_index - 1)
+      card_index = sanitizeIndex(card_index - 1, cards.length)
       updateCard()
     }
 
@@ -2298,7 +2307,7 @@
         <span id="reset_params" class="small_buttons">
           <i class="fa-solid fa-arrows-rotate"></i>
         </span>
-        <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
+        <img src="logo.png" style="width: 200px;  display: block; margin-left: auto; margin-right: auto;">
       </div>
     </div>
 
@@ -2330,15 +2339,6 @@
           <span id="word_4"></span>
           <span id="word_4_translation" class="translation"></span>
         </div>
-      </div>
-    </div>
-
-    <div class="row" id="qr">
-      <div class="three columns" style="margin-top: 1px;">
-        <!-- empty-->
-      </div>
-      <div class="six columns">
-      <img src="qr.png" style="width: 100px; padding-top: 20px; display: block;  margin-right: auto;">
       </div>
     </div>
   </div>
