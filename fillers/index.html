@@ -86,6 +86,14 @@
   </style>
 </head>
 <body>
+<a href="#one-piece">One Piece</a> |
+<a href="#naruto">Naruto</a> |
+<a href="#naruto-shippuden">Naruto Shippuden</a> |
+<a href="#bleach">Bleach</a> |
+<a href="#dragon-ball">Dragon Ball</a> |
+<a href="#dragon-ball-z">Dragon Ball Z</a> |
+<a href="#dragon-ball-super">Dragon Ball Super</a>
+
 
 <div id="container">
   <h1 id="page-title"></h1>
@@ -98,9 +106,8 @@
     <div id="conflict" class="legend-item conflict">conflict</div>
   </div>
   <div id="grid"></div>
+  <button id="download-btn" onclick="downloadPNG()">Download as PNG</button>
 </div>
-
-<button id="download-btn" onclick="downloadPNG()">Download as PNG</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
@@ -134,9 +141,11 @@
     document.title = `Fillers: ${show.title}`;
     document.getElementById('page-title').textContent = show.title;
 
-    const max = Math.max(...show.canon, ...show.mixed, ...show.fillers, ...show.anime_canon);
     const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('visible'));
 
+    const max = Math.max(...show.canon, ...show.mixed, ...show.fillers, ...show.anime_canon);
     const seen = new Set();
 
     for (let i = 1; i <= max; i++) {
@@ -154,9 +163,15 @@
     }
   }
 
-  fetch('one-piece.json')
-    .then(r => r.json())
-    .then(show => renderGrid(show));
+  function loadShow(name) {
+    fetch(`jsons/${name}.json`)
+      .then(r => r.json())
+      .then(show => renderGrid(show));
+  }
+
+  loadShow(window.location.hash.slice(1));
+
+  window.addEventListener('hashchange', () => loadShow(window.location.hash.slice(1)));
 </script>
 
 </body>
