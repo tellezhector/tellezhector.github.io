@@ -48,12 +48,18 @@
       color: #eaebef;
     }
 
+    .regular_button:hover, .regular_button:focus {
+      color: #b4a4dc;
+    }
+
     .right_button {
+      font-size: large;
       float: right;
       width: 49%;
     }
 
     .left_button {
+      font-size: large;
       float: left;
       width: 49%;
     }
@@ -589,7 +595,7 @@
     var locale = url.searchParams.has('l') ? url.searchParams.get('l') : 'es_MX'
     var second_locale = url.searchParams.has('sl') ? url.searchParams.get('sl') : 'en_US'
     var card_index = url.searchParams.has('i') ? parseInt(url.searchParams.get('i')) : parseInt('0')
-    var card_index = card_index ? !isNaN(card_index) : 0
+    var card_index = isNaN(card_index) ? 0 : card_index
     const numSeed = cyrb128(textSeed)[0]
     const random = mulberry32(numSeed)
 
@@ -648,7 +654,7 @@
 
 
     function displayCard(card, locale, second_locale) {
-      document.getElementById('card_number').innerText = card.card_number
+      document.getElementById('card_number').innerText = card.card_number + '/' + cards.length
 
       for (let i = 0; i < 5; i++) {
         document.getElementById('word_' + i).innerText = card.getWord(i, locale)
