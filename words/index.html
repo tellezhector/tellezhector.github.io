@@ -43,6 +43,20 @@
     .yellow {
       background-color: #ff9248;
     }
+
+    .regular_button {
+      color: #eaebef;
+    }
+
+    .right_button {
+      float: right;
+      width: 49%;
+    }
+
+    .left_button {
+      float: left;
+      width: 49%;
+    }
   </style>
 
   <script>
@@ -636,13 +650,19 @@
       }
     }
 
-    function sanitizeCardIndex() {
-      card_index += cards.length
-      card_index = card_index % cards.length
+    function sanitizeCardIndex(new_index) {
+      new_index += cards.length
+      new_index = new_index % cards.length
+      return new_index
     }
 
     function incrementAndUpdate() {
-      card_index += 1
+      card_index = sanitizeCardIndex(card_index + 1)
+      displayCard(cards[card_index], locale, second_locale)
+    }
+
+    function decrementAndUpdate() {
+      card_index = sanitizeCardIndex(card_index - 1)
       displayCard(cards[card_index % cards.length], locale, second_locale)
     }
 
@@ -653,7 +673,8 @@
     cards = shuffleArray(cards, numSeed)
     window.onload = function() {
      displayCard(cards[card_index], locale, second_locale)
-     document.getElementById('next-card').addEventListener('click', incrementAndUpdate)
+     document.getElementById('next_card').addEventListener('click', incrementAndUpdate)
+     document.getElementById('previous_card').addEventListener('click', decrementAndUpdate)
    };
   </script>
   <!-- Basic Page Needs
@@ -674,6 +695,7 @@
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" integrity="sha512-EZLkOqwILORob+p0BXZc+Vm3RgJBOe1Iq/0fiI7r/wJgzOFZMlsqTa29UEl6v6U6gsV4uIpsNZoV32YZqrCRCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -716,11 +738,21 @@
     </div>
 
     <div class="row" style="margin-top: 30px;">
-      <div class="one-third column">
-      </div>
-      <div class="one-third column">
-         <button id="next-card" class="button-primary">next</button>
-      </div>
+      <button id="save_params" class="regular_button left_button">
+        <i class="fa-solid fa-floppy-disk"></i>
+      </button>
+      <button id="swap_languages" class="regular_button right_button">
+        <i class="fa-solid fa-language"></i>
+      </button>
+    </div>
+
+    <div class="row">
+      <button id="previous_card" class="button-primary left_button">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <button id="next_card" class="button-primary right_button">
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
   </div>
 
