@@ -2157,6 +2157,25 @@
       updateCard()
     }
 
+    function doubleTap(handler) {
+    let lastTap = 0;
+    let timeout;
+    return function detectDoubleTap(event) {
+      const curTime = new Date().getTime();
+      const tapLen = curTime - lastTap;
+      if (tapLen < 500 && tapLen > 0) {
+        handler(event);
+        console.log('Double tapped!');
+        event.preventDefault();
+      } else {
+        timeout = setTimeout(() => {
+          clearTimeout(timeout);
+        }, 500);
+      }
+      lastTap = curTime;
+    };
+    }
+
     window.onload = function() {
      document.getElementById('next_card').addEventListener('click', incrementAndUpdate)
      document.getElementById('previous_card').addEventListener('click', decrementAndUpdate)
@@ -2164,7 +2183,11 @@
      document.getElementById('save_params').addEventListener('click', saveParams)
      document.getElementById('reset_params').addEventListener('click', resetParams)
      document.getElementById('shuffle').addEventListener('click', shuffleDeck)
-     document.getElementById('username').addEventListener('click', changeUser)
+     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      document.getElementById('username').addEventListener('touchend', doubleTap(changeUser), { passive: false});
+     } else {
+       document.getElementById('username').addEventListener('dblclick', changeUser)
+     }
 
      updateCard()
    };
@@ -2238,10 +2261,8 @@
 
     .name_tag {
       color: #b4a4dc;
-      float: left;
       padding-left: 5px;
       font-size: small;
-      position: fixed;
       font-family: 'Courier New', Courier, monospace;
     }
 
@@ -2249,6 +2270,11 @@
       color: #4ec9a5;
       font-weight: bold;
       cursor: pointer;
+
+      /* disable selection because double clicking has an action on this element. */
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
     }
 
     .username:hover {
@@ -2285,11 +2311,14 @@
       color: #b4a4dc;
     }
 
-    .small_buttons {
+    .small_buttons_container {
+      float: right;
+    }
+
+    .small_button {
       color: #5C5470;
       padding-left: 5px;
       float: right;
-      top: 0;
       cursor: pointer;
     }
 
@@ -2320,19 +2349,37 @@
       <div class="three columns" style="margin-top: 1px;">
         <!-- empty-->
       </div>
+
       <div class="six columns">
-        <div class="name_tag">
-          <span id="introduction">hello</span>
-          <div></div>
-          <span id="username" class="username">world</span>
+        <div class="row">
+          <div class="four columns">
+            <div class="name_tag">
+              <span id="introduction">hello</span>
+              <div></div>
+              <span id="username" class="username">world</span>
+            </div>
+          </div>
+          <div class="four columns">
+            <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
+          </div>
+          <div class="four columns">
+            <div class="small_buttons_container">
+              <span id="save_params" class="small_button">
+                <i class="fa-solid fa-floppy-disk"></i>
+              </span>
+              <span id="reset_params" class="small_button">
+                <i class="fa-solid fa-ban"></i>
+              </span>
+            </div>
+          </div>
         </div>
-        <span id="save_params" class="small_buttons">
-          <i class="fa-solid fa-floppy-disk"></i>
-        </span>
-        <span id="reset_params" class="small_buttons">
-          <i class="fa-solid fa-ban"></i>
-        </span>
-        <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
+
+
+
+      </div>
+
+      <div class="three columns" style="margin-top: 1px;">
+        <!-- empty-->
       </div>
     </div>
 
