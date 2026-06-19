@@ -8,8 +8,13 @@
         async src="//gc.zgo.at/count.js"></script>
   <style>
     #container {
+      display: none;
       max-width: 600px;
       margin: 0 auto;
+    }
+
+    #container.visible {
+      display: block;
     }
 
     h1 {
@@ -40,7 +45,7 @@
 
     body {
       font-family: monospace;
-      padding: 1rem;
+      padding: 0.5rem;
       background: #111;
       color: #eee;
     }
@@ -86,6 +91,12 @@
 
     nav a, nav a:visited {
       color: #eee;
+    }
+
+    @media (max-width: 500px) {
+      .cell {
+        font-size: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -143,13 +154,17 @@
     return 'unknown';
   }
 
-  function renderGrid(show) {
-    document.title = `Fillers: ${show.title}`;
-    document.getElementById('page-title').textContent = show.title;
-
+  function clearGrid() {
     const grid = document.getElementById('grid');
     grid.innerHTML = '';
     document.querySelectorAll('.legend-item').forEach(el => el.classList.remove('visible'));
+    document.getElementById('container').classList.remove('visible');
+  }
+
+  function renderGrid(show) {
+    document.getElementById('container').classList.add('visible');
+    document.title = `Fillers: ${show.title}`;
+    document.getElementById('page-title').textContent = show.title;
 
     const max = Math.max(...show.canon, ...show.mixed, ...show.fillers, ...show.anime_canon);
     const seen = new Set();
@@ -170,12 +185,14 @@
   }
 
   function loadShow(name) {
+    clearGrid()
     fetch(`jsons/${name}.json`)
       .then(r => r.json())
       .then(show => renderGrid(show));
   }
 
-  loadShow(window.location.hash.slice(1));
+  showName = window.location.hash.slice(1)
+  loadShow(showName);
 
   window.addEventListener('hashchange', () => loadShow(window.location.hash.slice(1)));
 </script>
