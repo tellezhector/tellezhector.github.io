@@ -784,17 +784,27 @@
       background-color: #ff9248;
     }
 
-    .regular_button {
+    button {
+      height: 4em;
+    }
+
+    .regular_button, .regular_button:visited, .regular_button:focus {
       color: #eaebef;
     }
 
-    .regular_button:hover, .regular_button:focus {
+    .regular_button:hover {
       color: #b4a4dc;
     }
 
     .save_button {
+      color: #eaebef;
       position: fixed;
       top: 0;
+      cursor: pointer;
+    }
+
+    .save_button:hover, .regular_button:focus {
+      color: #b4a4dc;
     }
 
     .save_button:focus {
@@ -821,20 +831,23 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-third column" style="margin-top: 1px;">
+      <div class="three columns" style="margin-top: 1px;">
         <!-- empty-->
       </div>
-      <div class="one-third column">
+      <div class="six columns">
         <img src="logo.png" style="width: 60px;  display: block; margin-left: auto; margin-right: auto;">
+        <span id="save_params" class="save_button">
+          <i class="fa-solid fa-floppy-disk"></i>
+        </span>
       </div>
     </div>
 
     <div class="row">
-      <div class="one-third column" style="margin-top: 1px;">
+      <div class="three columns" style="margin-top: 1px;">
         <!-- empty-->
       </div>
 
-      <div class="one-third column card">
+      <div class="six columns card">
         <span id="card_number" class="card_number"></span>
         <div class="row word_box yellow">
           <span id="word_0"></span>
@@ -860,22 +873,19 @@
     </div>
   </div>
 
-  <span id="save_params" class="regular_button left_button save_button">
-    <i class="fa-solid fa-floppy-disk"></i>
-  </span>
-
   <div class="footer">
     <div class="container">
       <div class="row" style="margin-top: 30px;">
 
-        <div class="one-third column" style="margin-top: 1px;">
+        <div class="three columns" style="margin-top: 1px;">
           <!-- empty-->
         </div>
 
-        <div class="one-third column">
+        <div class="six columns">
           <button id="swap_locales" class="regular_button right_button">
             <i class="fa-solid fa-language"></i>
           </button>
+          <!-- this is a line break for divs -->
           <div style="clear: both;"></div>
           <button id="previous_card" class="button-primary left_button">
             <i class="fa-solid fa-arrow-left"></i>
