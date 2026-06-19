@@ -752,13 +752,20 @@
       margin: 20px;
       border: 1px solid #eaebef;
       padding: 5px;
-      min-height: 2em;
+      height: 3em;
     }
 
     .translation {
       color: #393053;
       font-weight: normal;
       font-size: medium;
+    }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
     }
 
     .card_number {
@@ -844,27 +851,29 @@
     </div>
   </div>
 
-  <div class="container">
-    <div class="row" style="margin-top: 30px;">
-      <div class="one-third column" style="margin-top: 1px;">
-        <!-- empty-->
-      </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row" style="margin-top: 30px;">
+        <div class="one-third column" style="margin-top: 1px;">
+          <!-- empty-->
+        </div>
 
-      <div class="one-third column">
-        <button id="save_params" class="regular_button left_button">
-          <i class="fa-solid fa-floppy-disk"></i>
-        </button>
-        <button id="swap_locales" class="regular_button right_button">
-          <i class="fa-solid fa-language"></i>
-        </button>
-        <button id="previous_card" class="button-primary left_button">
-          <i class="fa-solid fa-arrow-left"></i>
-        </button>
-        <button id="next_card" class="button-primary right_button">
-          <i class="fa-solid fa-arrow-right"></i>
-        </button>
-      </div>
+        <div class="one-third column">
+          <button id="save_params" class="regular_button left_button">
+            <i class="fa-solid fa-floppy-disk"></i>
+          </button>
+          <button id="swap_locales" class="regular_button right_button">
+            <i class="fa-solid fa-language"></i>
+          </button>
+          <button id="previous_card" class="button-primary left_button">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <button id="next_card" class="button-primary right_button">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
 
+      </div>
     </div>
   </div>
 <!-- End Document
