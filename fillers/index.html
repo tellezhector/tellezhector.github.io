@@ -118,12 +118,12 @@
 <div id="container">
   <h1 id="page-title"></h1>
   <div id="legend">
-    <div id="canon" class="legend-item canon">canon</div>
-    <div id="mixed" class="legend-item mixed">mixed</div>
-    <div id="anime_canon" class="legend-item anime_canon">anime canon</div>
-    <div id="filler" class="legend-item filler">filler</div>
-    <div id="unknown" class="legend-item unknown">unknown</div>
-    <div id="conflict" class="legend-item conflict">conflict</div>
+    <div id="canon" class="legend-item canon" data-label="canon"></div>
+    <div id="mixed" class="legend-item mixed" data-label="mixed"></div>
+    <div id="anime_canon" class="legend-item anime_canon" data-label="anime canon"></div>
+    <div id="filler" class="legend-item filler" data-label="filler"></div>
+    <div id="unknown" class="legend-item unknown" data-label="unknown"></div>
+    <div id="conflict" class="legend-item conflict" data-label="conflict"></div>
   </div>
   <div id="grid"></div>
   <button id="download-btn" onclick="downloadPNG()">Download as PNG</button>
@@ -170,7 +170,7 @@
     document.getElementById('page-title').textContent = show.title;
 
     const max = Math.max(...show.canon, ...show.mixed, ...show.fillers, ...show.anime_canon);
-    const seen = new Set();
+    const counts = {};
 
     for (let i = 1; i <= max; i++) {
       const cls = getClass(show, i);
@@ -179,11 +179,17 @@
       cell.textContent = i;
       grid.appendChild(cell);
 
-      if (!seen.has(cls)) {
-        seen.add(cls);
-        const legendItem = document.getElementById(cls);
-        if (legendItem) legendItem.classList.add('visible');
-      }
+      counts[cls] = (counts[cls] || 0) + 1;
+      const legendItem = document.getElementById(cls);
+      if (legendItem) legendItem.classList.add('visible');
+    }
+
+    for (const [cls, count] of Object.entries(counts)) {
+      const legendItem = document.getElementById(cls);
+      if (!legendItem) continue;
+      const pct = (count / max) * 100;
+      const pctStr = Number.isInteger(pct) ? `${pct}%` : `${pct.toFixed(1)}%`;
+      legendItem.textContent = `${legendItem.dataset.label} ${pctStr}`;
     }
   }
 
