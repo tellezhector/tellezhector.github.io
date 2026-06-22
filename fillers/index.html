@@ -151,7 +151,7 @@
 
 <div id="container">
   <h1 id="page-title"></h1>
-  <button id="colorblind-btn" onclick="toggleColorblind()">colorblind-friendly colors: off</button>
+  <button id="colorblind-btn" onclick="toggleColorblind()">colorblind-friendly: off</button>
   <div id="legend">
     <div id="canon" class="legend-item canon" data-label="canon"></div>
     <div id="mixed" class="legend-item mixed" data-label="mixed"></div>
@@ -169,7 +169,7 @@
   function toggleColorblind() {
     const btn = document.getElementById('colorblind-btn');
     const on = document.documentElement.classList.toggle('colorblind');
-    btn.textContent = `colorblind-friendly colors: ${on ? 'on' : 'off'}`;
+    btn.textContent = `colorblind-friendly: ${on ? 'on' : 'off'}`;
     btn.classList.toggle('active', on);
   }
 
