@@ -65,12 +65,30 @@
       border-radius: 4px;
     }
 
-    .canon      { background-color: #4caf50; color: #fff; }
-    .mixed      { background-color: #ffeb3b; color: #000; }
-    .filler     { background-color: #f44336; color: #fff; }
-    .anime_canon { background-color: #ff9800; color: #fff; }
-    .unknown    { background-color: #555; color: #aaa; }
-    .conflict   { background-color: #9c27b0; color: #aaa; }
+    :root {
+      --canon-bg: #4CAF50;     --canon-fg: #FFF;
+      --mixed-bg: #FFEB3B;     --mixed-fg: #000;
+      --filler-bg: #F44336;    --filler-fg: #FFF;
+      --anime-canon-bg: #FF9800; --anime-canon-fg: #FFF;
+      --unknown-bg: #555;      --unknown-fg: #AAA;
+      --conflict-bg: #9C27B0;  --conflict-fg: #AAA;
+    }
+
+    :root.colorblind {
+      --canon-bg: #0072B2;     --canon-fg: #FFF;
+      --mixed-bg: #F0E442;     --mixed-fg: #000;
+      --filler-bg: #D55E00;    --filler-fg: #FFF;
+      --anime-canon-bg: #E69F00; --anime-canon-fg: #000;
+      --unknown-bg: #555;      --unknown-fg: #AAA;
+      --conflict-bg: #CC79A7;  --conflict-fg: #000;
+    }
+
+    .canon      { background-color: var(--canon-bg);      color: var(--canon-fg); }
+    .mixed      { background-color: var(--mixed-bg);      color: var(--mixed-fg); }
+    .filler     { background-color: var(--filler-bg);     color: var(--filler-fg); }
+    .anime_canon { background-color: var(--anime-canon-bg); color: var(--anime-canon-fg); }
+    .unknown    { background-color: var(--unknown-bg);    color: var(--unknown-fg); }
+    .conflict   { background-color: var(--conflict-bg);   color: var(--conflict-fg); }
 
     #download-btn {
       display: block;
@@ -88,6 +106,22 @@
     #download-btn:hover {
       background: #444;
     }
+
+    #colorblind-btn {
+      display: block;
+      margin: 0.5rem auto 0.5rem;
+      padding: 8px 20px;
+      font-family: monospace;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #333;
+      color: #eee;
+      border: 1px solid #555;
+      border-radius: 4px;
+    }
+
+    #colorblind-btn:hover { background: #444; }
+    #colorblind-btn.active { background: #1a3a5c; border-color: #0072B2; }
 
     nav a, nav a:visited {
       color: #eee;
@@ -117,6 +151,7 @@
 
 <div id="container">
   <h1 id="page-title"></h1>
+  <button id="colorblind-btn" onclick="toggleColorblind()">colorblind-friendly colors: off</button>
   <div id="legend">
     <div id="canon" class="legend-item canon" data-label="canon"></div>
     <div id="mixed" class="legend-item mixed" data-label="mixed"></div>
@@ -131,6 +166,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+  function toggleColorblind() {
+    const btn = document.getElementById('colorblind-btn');
+    const on = document.documentElement.classList.toggle('colorblind');
+    btn.textContent = `colorblind-friendly colors: ${on ? 'on' : 'off'}`;
+    btn.classList.toggle('active', on);
+  }
+
   function downloadPNG() {
     html2canvas(document.getElementById('container'), { backgroundColor: '#111' }).then(canvas => {
       const a = document.createElement('a');
